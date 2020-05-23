@@ -6,7 +6,7 @@
 
 节点嵌入的目标是对节点进行编码，以使嵌入空间(例如点积)中的相似度近似于原始网络中的相似度，我们将探讨的节点嵌入算法通常包括三个基本阶段：
 
-1. 定义编码器(即从节点到嵌入的映射)。下面我们提供了一个图表来说明编码过程，将地图节点 $u$和$v$ 映射到低维向量 $z_{u}$ 和$z_{v}$：![node_embeddings](/Users/yaso/Desktop/CS224W/notes/images/node_embeddings.png)
+1. 定义编码器(即从节点到嵌入的映射)。下面我们提供了一个图表来说明编码过程，将地图节点 $u$和$v$ 映射到低维向量 $z_{u}$ 和$z_{v}$：![node_embeddings.png](https://i.loli.net/2020/05/16/T9G4DU7esobmKFR.png)
 2. 定义节点相似性函数（即原始网络中相似性的度量），它明确了向量空间中到原始网络中的映射关系。
 3. 优化编码器的参数，以使$u$和$v$ 在原网络中与在节点嵌入之间的点积近似：$simailary(u,v)\approx { z }_{ u }^{ T }{ z }_{ v }$
 
@@ -51,9 +51,9 @@ $P_{v}$ 表示在所有节点上随机分布。我们只是针对 $k$ 个随机�
 
 ### Node2vec
 
-到目前为止，我们已经描述了在给定随机游走统计的情况下如何优化嵌入。但我们应该使用哪些策略来运行这些随机游走？如前所述，最简单的想法是从每个节点开始运行固定长度的无偏的随机游走（即*DeepWalk from Perozzi et al., 2013*），问题是这种相似性概念太受约束。我们观察到，节点 $u$ 的网络邻域 $N_{R}(u)$ 的灵活概念导致了丰富的节点嵌入，Node2Vec的想法是使用灵活的，带偏差的随机游走，可以在网络的本地视图和全局视图之间进行权衡（*Grover and Leskovec，2016*）。使用两种经典策略 **BFS** 和 **DFS** 定义节点 $u$ 的 $N_{R}(u)$ ：![node2vec](/Users/yaso/Desktop/CS224W/notes/images/node2vec.png)
+到目前为止，我们已经描述了在给定随机游走统计的情况下如何优化嵌入。但我们应该使用哪些策略来运行这些随机游走？如前所述，最简单的想法是从每个节点开始运行固定长度的无偏的随机游走（即*DeepWalk from Perozzi et al., 2013*），问题是这种相似性概念太受约束。我们观察到，节点 $u$ 的网络邻域 $N_{R}(u)$ 的灵活概念导致了丰富的节点嵌入，Node2Vec的想法是使用灵活的，带偏差的随机游走，可以在网络的本地视图和全局视图之间进行权衡（*Grover and Leskovec，2016*）。使用两种经典策略 **BFS** 和 **DFS** 定义节点 $u$ 的 $N_{R}(u)$ ：![node2vec.png](https://i.loli.net/2020/05/16/qEl587OzC3r1Piv.png)
 
-BFS可以提供邻居的局部微观视图，而DFS可以提供邻居的全局宏观视图。在这里我们可以定义返回参数 $p$ 和进出参数 $q$ 并使用偏置 $2^{nd}$-order的随机游走探索网络邻居，对过渡概率建模以返回到先前的节点，并定义 $q$ 为BFS和DFS的“比率”。具体来说，如下图所示，walker来自边 $(s_{1}, w)$，现在位于 $w$， 1, 1/q, 和1/p 表示访问下一个节点的概率（此处 $w$, 1, 1/q, 和1/p是非标准化概率）：![biased_walk](/Users/yaso/Desktop/CS224W/notes/images/biased_walk.png)
+BFS可以提供邻居的局部微观视图，而DFS可以提供邻居的全局宏观视图。在这里我们可以定义返回参数 $p$ 和进出参数 $q$ 并使用偏置 $2^{nd}$-order的随机游走探索网络邻居，对过渡概率建模以返回到先前的节点，并定义 $q$ 为BFS和DFS的“比率”。具体来说，如下图所示，walker来自边 $(s_{1}, w)$，现在位于 $w$， 1, 1/q, 和1/p 表示访问下一个节点的概率（此处 $w$, 1, 1/q, 和1/p是非标准化概率）：![biased_walk.png](https://i.loli.net/2020/05/16/6gauC4IJDkO5mTb.png)
 
 所以现在 $N_{R}(u)$ 是偏置行走访问过的节点。让我们将我们的发现汇总起来来说明node2vec算法：
 
@@ -69,7 +69,7 @@ BFS可以提供邻居的局部微观视图，而DFS可以提供邻居的全局�
 $$
 (h,l,t)
 $$
-其中 $h \in E$ 是头实体或源节点，$l \in L$是关系 $t \in E$ 是尾部实体或目标节点。与以前的方法类似，将实体嵌入到实体空间 $\mathbb{R}^{k}$ 中。TransE的主要创新之处在于每个关系 $l$ 也作为向量 $l \in\mathbb{R}^{k}$ 的嵌入 。![TransE](/Users/yaso/Desktop/CS224W/notes/images/TransE.png)
+其中 $h \in E$ 是头实体或源节点，$l \in L$是关系 $t \in E$ 是尾部实体或目标节点。与以前的方法类似，将实体嵌入到实体空间 $\mathbb{R}^{k}$ 中。TransE的主要创新之处在于每个关系 $l$ 也作为向量 $l \in\mathbb{R}^{k}$ 的嵌入 。![TransE.png](https://i.loli.net/2020/05/16/RUDnh9XoJsVT4yp.png)
 
 也就是说，如果 $(h,l,s) \in S$, TransE尽力确保：
 $$
@@ -91,20 +91,21 @@ $$
 $$
 \mathbf{\|e\|_{2}=1}
 $$
-下图为TransE算法的伪代码：![TransE_a](/Users/yaso/Desktop/CS224W/notes/images/TransE_a.png)
+下图为TransE算法的伪代码：![TransE_a.png](https://i.loli.net/2020/05/16/EfgFymVQAhx7Rjn.png)
 
 ### Graph Embedding（图嵌入）
 
 我们可能还想在某些应用中嵌入整个图 $G$（例如，对有毒分子与无毒分子进行分类，识别异常图）。
 
-![graph_embedding](/Users/yaso/Desktop/CS224W/notes/images/graph_embedding.png)
+![graph_embedding.png](https://i.loli.net/2020/05/16/Zsp4zN3vqSKi2QH.png)
 
 有几种想法可以完成图形嵌入：
 
 1. 简单的想法 (*Duvenaud et al., 2016*) 是在（子）图 $G$ 上运行标准的图形嵌入技术，然后对（子)图 $G$ 中的节点嵌入求和（或取平均值）。
 
-2. 引入“虚拟节点”来表示（子）图并运行标准的图形嵌入技术：![virtual_nodes](/Users/yaso/Desktop/CS224W/notes/images/virtual_nodes.png)
+2. 引入“虚拟节点”来表示（子）图并运行标准的图形嵌入技术：![virtual_nodes.png](https://i.loli.net/2020/05/16/r31RtmeplKU6u9Q.png)
 
    要了解更多关于利用虚拟节点进行子图嵌入的内容，请参阅(*Li et al., Gated Graph Sequence Neural Networks (2016)*)
 
 3. 我们还可以使用**匿名游走嵌入**。为了学习图嵌入，我们可以列举 $l$ 个步骤中所有可能的匿名游走 $a_{i}$ 并记录其计数，并将图形表示为这些游走中的概率分布。要了解有关匿名步行嵌入的更多信息，请参阅(*Ivanov et al., Anonymous Walk Embeddings (2018)*)
+

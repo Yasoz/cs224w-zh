@@ -27,7 +27,7 @@
 **举例场景：**
 
 - 图中所有节点初始时选择行为 B。
-- 设少量的采用行为 A 行为的节点集合 S。硬连接此集合以使这些节点将永久使用A 而不管收益如何。设置 $a=b-\epsilon$ ，其中 $\epsilon$ 是一个非常小的常量。解释：如果我的邻居中有50％以上的人采用A行为，我就会采用。<img src="/Users/yaso/Desktop/CS224W/notes/images/decision_based_network_spreading_example.gif" style="zoom:50%;" />
+- 设少量的采用行为 A 行为的节点集合 S。硬连接此集合以使这些节点将永久使用A 而不管收益如何。设置 $a=b-\epsilon$ ，其中 $\epsilon$ 是一个非常小的常量。解释：如果我的邻居中有50％以上的人采用A行为，我就会采用。<img src="https://i.loli.net/2020/05/16/WUCqTJe3wFIyjix.png" style="zoom:50%;" />
 
 ### 案例研究：[在社交网络上建模抗议招募](https://arxiv.org/abs/1111.5595)
 
@@ -40,10 +40,10 @@ Twitter用户是无向网络图。70个与2011年西班牙反紧缩抗议活动�
 
 Key Insights:
 
-- 激活阈值的分布具有两个局部峰值: i)在 $\frac{k_{a}}{k_{in}}\approx 0$ 处，表示许多自活跃用户加入； ii)在 $\frac{k_{a}}{k_{in}}\approx0.5$ 表明一半的用户在邻居加入后加入。其余大部分分布均匀。<img src="/Users/yaso/Desktop/CS224W/notes/images/activation_threshold_distribution.jpg" style="zoom:30%;" />
+- 激活阈值的分布具有两个局部峰值: i)在 $\frac{k_{a}}{k_{in}}\approx 0$ 处，表示许多自活跃用户加入； ii)在 $\frac{k_{a}}{k_{in}}\approx0.5$ 表明一半的用户在邻居加入后加入。其余大部分分布均匀。<img src="https://i.loli.net/2020/05/16/u91S5i2oPVhMEH4.jpg" style="zoom:30%;" />
 - 加入运动的邻居数量“爆发”对阈值较高的用户影响较大，而阈值较低的用户影响较小
 - 多数级联很小
-- 更大的级联是由具有更高核心数(即更核心)的用户启动的。k-core被定义为每一个节点具有至少度为k的最大连通子图，并且可以通过迭代地移除与节点度小于k的节点进行评估<img src="/Users/yaso/Desktop/CS224W/notes/images/k-core.jpg" style="zoom:30%;" />
+- 更大的级联是由具有更高核心数(即更核心)的用户启动的。k-core被定义为每一个节点具有至少度为k的最大连通子图，并且可以通过迭代地移除与节点度小于k的节点进行评估<img src="https://i.loli.net/2020/05/16/dYCM2jD6QBomcKv.png" style="zoom:30%;" />
 
 ### Extending Game Theoretic Model: multi-behavior adoption
 
@@ -61,19 +61,19 @@ Key Insights:
 
 **情况1: A-w-B**
 
-<img src="/Users/yaso/Desktop/CS224W/notes/images/decision_model_1.png" style="zoom:100%;" />
+<img src="https://i.loli.net/2020/05/16/QWfix4s2VaYHZDJ.jpg" style="zoom:100%;" />
 
 w 的收益为: *A: a, B: 1, AB: a+1-c*
 
-<img src="/Users/yaso/Desktop/CS224W/notes/images/decision_model_2.png" style="zoom:40%;" />
+<img src="https://i.loli.net/2020/05/16/iVm8XzbpKtFJgH4.png" style="zoom:40%;" />
 
 **情况2: AB-w-B**
 
-<img src="/Users/yaso/Desktop/CS224W/notes/images/decision_model_3.png" style="zoom:100%;" />
+<img src="https://i.loli.net/2020/05/16/Obgd3q4Ce91EtYm.jpg" style="zoom:100%;" />
 
 w 的收益为: *A: a, B: 1, AB: max(a, 1)+1-c*
 
-<img src="/Users/yaso/Desktop/CS224W/notes/images/adoption_graph_general.jpg" style="zoom:40%;" />
+<img src="https://i.loli.net/2020/05/16/heCqUzvkDLmK5IA.gif" style="zoom:40%;" />
 
 这些图显示了不同的 (a, c) 值区域如何影响基于决策的扩散:
 

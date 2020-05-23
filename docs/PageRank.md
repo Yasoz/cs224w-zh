@@ -17,7 +17,7 @@ $$
 \operatorname{In}(v)=\{w | w \text { can reach } v\} \\
 \text { Out }(v)=\{w | v \text { can reach } w\}
 $$
-这些集合可以通过运行简单的BFS来确定。例如，在下图中：![](/Users/yaso/Desktop/CS224W/notes/images/BFS.png)
+这些集合可以通过运行简单的BFS来确定。例如，在下图中：![BFS.png](https://i.loli.net/2020/05/16/cNAfjpubvDO2kh3.png)
 $$
 \text {In}(A)=A,B,C,E,G\\
 \text {Out}(A)=A,B,C,D,F
@@ -33,7 +33,7 @@ $$
 任何有向图都可以表示为这两种类型的组合。即：
 
 1. **识别有向图中的强连接组件 (strongly connected components, SCCs) **: SCC是图 $G$ 中的一组紧密连接的节点集合 $S$ ，并且在 $G$ 中没有比 $S$ 更大的集合。SCCs可以通过以下方式来识别：对所有的给定节点的入图节点运行BFS，并在来自同一节点的所有出图节点运行另一个BFS，然后计算这两个集合的交集。
-2. **将SCC合并到超节点中，创建新图 G': **如果G中相应SCC之间存在边，则在SCC和节点之间创建边形成 **G'**，**G' **现在是DAG。![](/Users/yaso/Desktop/CS224W/notes/images/SCC_DAG.png)
+2. **将SCC合并到超节点中，创建新图 G': **如果G中相应SCC之间存在边，则在SCC和节点之间创建边形成 **G'**，**G' **现在是DAG。![SCC_DAG.png](https://i.loli.net/2020/05/16/bGpStOEJs5VCzyU.png)
 
 ### Bowtie structure of the web graph
 
@@ -41,11 +41,11 @@ Broder et al. (1999)对网络进行了一次大的快照，并试图了解网络
 
 他们的发现显示在下图中。在这里，起始节点按从该节点开始进行BFS访问的节点数量进行排序 
 
-![](/Users/yaso/Desktop/CS224W/notes/images/BowTie_1.png)
+![BowTie_1.png](https://i.loli.net/2020/05/16/teDUgK5h9JW8B1a.png)
 
 - 左侧蓝色的节点表示在停止之前到达很少数量的节点
 - 右侧洋红色的节点表示可以在停止之前到达大量的节点
-- 使用此方法，我们可以确定如下所示的蝴蝶结形网络图的IN和OUT组件中的节点数。<img src="/Users/yaso/Desktop/CS224W/notes/images/BowTie_2.png" style="zoom:50%;" />
+- 使用此方法，我们可以确定如下所示的蝴蝶结形网络图的IN和OUT组件中的节点数。![BowTie_2.png](https://i.loli.net/2020/05/16/I8AhS3rvtUgPFoQ.png)
 - SCC对应于图中最大的强连接组件。
 - IN组件对应于具有SCC的出站链接但没有来自SCC的入站链接的节点。OUT组件对应于具有来自SCC的入站链接但没有SCC的出站链接的节点。
 - 同时具有入站链接和出站链接的节点都属于SCC。
@@ -60,7 +60,9 @@ Broder et al. (1999)对网络进行了一次大的快照，并试图了解网络
 
 进入页面的链接被视为该页面的投票，这有助于确定该页面的重要性。从重要页面进站的链接更为重要。这变成了递归关系：页面A的重要性取决于页面B，页面B的重要性取决于页面C，依此类推。
 
-每个链接的投票与其源页面的重要性成正比。在下图中，节点 $j$ 具有从节点 $i$ 和节点 $k$ 的进入链接，重要性分别为 $\frac {r_{i}}{3}$ 和 $\frac {r_{k}}{4}$ 这是因为节点 $i$ 有三个出站链接,节点 $k$ 有四个出站链接 。同样，节点 $j$ 的重要性在其他三个出站节点之间平均分配。![](/Users/yaso/Desktop/CS224W/notes/images/LinkWeights.png)
+每个链接的投票与其源页面的重要性成正比。在下图中，节点 $j$ 具有从节点 $i$ 和节点 $k$ 的进入链接，重要性分别为 $\frac {r_{i}}{3}$ 和 $\frac {r_{k}}{4}$ 这是因为节点 $i$ 有三个出站链接,节点 $k$ 有四个出站链接 。同样，节点 $j$ 的重要性在其他三个出站节点之间平均分配。
+
+![LinkWeights.png](https://i.loli.net/2020/05/16/k8dEPQhI9JVC4LG.png)
 
 总而言之，如果其他重要页面指向该页面，则该页面很重要。给定一组页面，我们可以定义节点 $j$ 的页面重要性 $r_{j}$ :
 $$
@@ -112,9 +114,9 @@ $$
 
 ### Example
 
-<img src="/Users/yaso/Desktop/CS224W/notes/images/PRExample1.png" style="zoom:80%;" />
+![PRExample1.png](https://i.loli.net/2020/05/16/luIceVmH6gkQsoZ.png)
 
-<img src="/Users/yaso/Desktop/CS224W/notes/images/PRExample2.png" style="zoom:80%;" />
+![PRExample2.png](https://i.loli.net/2020/05/16/9roGsYEj65aJe4Z.png)
 
 **r** 向量是页面排名或页面重要性。所以页面 $y$ 的重要性是 $\frac{6}{15}$，页面 $a$ 的重要性是 $\frac{6}{15}$，所以页面 $m$ 的重要性是 $\frac{3}{15}$
 
@@ -122,11 +124,11 @@ $$
 
 1. **Dead ends(死胡同)**	：这些页面具有入站链接，但没有出站链接。作为一个随机的浏览者，这就像来到悬崖上，无处可去。这将意味着邻接矩阵不再是列随机的，并且会泄漏重要性。
 
-![](/Users/yaso/Desktop/CS224W/notes/images/DeadEnd.png)
+![DeadEnd.png](https://i.loli.net/2020/05/16/iNMqK5Jwvzb3Do4.png)
 
 2. **Spider traps(爬虫陷阱)** : 这些页面只有自我边作为外出边，导致浏览者被困住。最终，**Spider traps** 将吸收所有重要性。给定一个带有自环的图 b，对于接下来的迭代随机冲浪者最终将跳转到 b 并陷入困境 。幂次迭代将收敛于具有所有重要性的 b，而使 a 失去重要性。
 
-![](/Users/yaso/Desktop/CS224W/notes/images/SpiderTrap.png)
+![](https://i.loli.net/2020/05/16/CgqfhsBtvpXbnNc.png)
 
 **我们该如何解决？使用随机传送或随机跳跃**
 
@@ -159,7 +161,7 @@ $$
 $$
 因为 **M** 是一个稀疏矩阵，这将会更容易计算，将它与标量相乘仍然是稀疏的，然后将其与向量相乘就不会占用大量计算资源。在此之后，我们只需添加一个常数，即随机游走直接跳到的 $\mathbf{r}_{new}$ 概率。那么总共需要的内存总量将会从 $O(N^{2})$ 降到 $O(N)$ 。在每次迭代时，某些页面排名可能会泄漏出去，通过对 **M** 重新进行规范化，我们可以重新插入泄漏的页面排名。
 
-这是将PageRank应用于图的工作示例：<img src="/Users/yaso/Desktop/CS224W/notes/images/PRGraphExample.png" style="zoom:50%;" />
+这是将PageRank应用于图的工作示例：<img src="https://i.loli.net/2020/05/16/fJBq4m6yxFkevPX.png" style="zoom:50%;" />
 
 在上图中，每个节点内是其页面排名得分或重要性得分。分数总和为100，节点的大小与其分数成正比。节点B重要性最高，因为很多节点都指向它。 这些节点虽然没有入站链接，但仍然很重要，因为随机游走跳跃可以跳转到它们。 节点C仅具有一个入站链接，但是由于它来自B，因此它也变得非常重要。 但是，C的重要性仍然不如B，因为B还有很多其他入站链接。
 
@@ -190,13 +192,13 @@ $$
 
 ### Personalized PageRank and random walk with restarts
 
-想象一下，我们有一个二部图，它由一侧的用户(下图中的圆圈)和另一侧的项目(正方形)组成。 我们想问两个项目之间的相关性或两个用户之间的相关性。假设用户过去已经购买过，那么根据他们与其他用户的共同点，我们可以向他们推荐什么？<img src="/Users/yaso/Desktop/CS224W/notes/images/ItemProduct.png" style="zoom:67%;" />
+想象一下，我们有一个二部图，它由一侧的用户(下图中的圆圈)和另一侧的项目(正方形)组成。 我们想问两个项目之间的相关性或两个用户之间的相关性。假设用户过去已经购买过，那么根据他们与其他用户的共同点，我们可以向他们推荐什么？<img src="https://i.loli.net/2020/05/16/wri3YKXL2gjRTcQ.png" style="zoom:67%;" />
 
 我们可以使用不同的指标来量化，例如最短路径或公共邻居的数量，但是这些功能不是很通用。相反，我们可以使用PageRank的修改版本，该版本不会按重要性对所有页面进行排名，而是根据与给定集合的接近程度对其进行排名。 该集称为传送集 **S**，此方法称为个性化PageRank。
 
 一种实现方法是采用传送集并使用幂次迭代来计算Pagerank向量。但是，由于这种情况下在 **S** 中只有一个节点，因此执行简单的随机游走会更快。因此，随机游走者从节点Q开始，然后每当它进行传送时，它就会返回到Q。这将通过识别访问次数而获得与Q最相似的所有节点。 因此，我们获得了一个非常简单的推荐系统，该系统在实践中效果很好，我们可以将其称为带重启的随机游走。
 
-<img src="/Users/yaso/Desktop/CS224W/notes/images/QPPR.png" style="zoom:67%;" />
+<img src="https://i.loli.net/2020/05/16/JWQ1BnTwpt79lAq.png" style="zoom:67%;" />
 
 重新启动的随机游走能够解决
 
