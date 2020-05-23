@@ -21,9 +21,9 @@
 - $A$ 是邻接矩阵
 - $X \in \mathbb{R}^{m \times|V|}$ 是节点的特征矩阵
 
-**计算图和广义卷积**<img src="https://i.loli.net/2020/05/16/CJnahtz93FykSOM.png" alt="aggregate_neighbors" style="zoom:50%;" />假设示例图(上图左图)为图 $G$ 。我们的目标是定义在图 $G$ 上的GCN计算图。计算图应同时保持图 $G$ 的结构和合并节点的相邻要素。例如，节点的嵌入向量 $A$ 应该包括它的邻居 $\left\{B,C,D\right\}$ 并且和 $\left\{B,C,D\right\}$ 的顺序无关。一种方法是简单地取 $\left\{B,C,D\right\}$ 的平均值。通常，聚合函数(上图右图中的方框)必须是**阶不变的**(最大值，平均值等)。上图具有两层计算图 $G$ 如下所示:![computation_graph](https://i.loli.net/2020/05/16/7StMl32PgOcz5hW.png)
+**计算图和广义卷积**<img src="/Users/yaso/Desktop/CS224W/notes/images/aggregate_neighbors.png" alt="aggregate_neighbors" style="zoom:50%;" />假设示例图(上图左图)为图 $G$ 。我们的目标是定义在图 $G$ 上的GCN计算图。计算图应同时保持图 $G$ 的结构和合并节点的相邻要素。例如，节点的嵌入向量 $A$ 应该包括它的邻居 $\left\{B,C,D\right\}$ 并且和 $\left\{B,C,D\right\}$ 的顺序无关。一种方法是简单地取 $\left\{B,C,D\right\}$ 的平均值。通常，聚合函数(上图右图中的方框)必须是**阶不变的**(最大值，平均值等)。上图具有两层计算图 $G$ 如下所示:![computation_graph](/Users/yaso/Desktop/CS224W/notes/images/computation_graph.png)
 
-这里，每个节点都基于其邻居定义一个计算图。特别的，节点 $A$ 的计算图结构如下所示:（第0层是输入层，输入为节点特征 $X_{i}$ ):<img src="https://i.loli.net/2020/05/16/uNVmrZ6aywn9QGj.png" alt="computation_graph_for_a" style="zoom:67%;" />
+这里，每个节点都基于其邻居定义一个计算图。特别的，节点 $A$ 的计算图结构如下所示:（第0层是输入层，输入为节点特征 $X_{i}$ ):<img src="/Users/yaso/Desktop/CS224W/notes/images/computation_graph_for_a.png" alt="computation_graph_for_a" style="zoom:67%;" />
 
 ### Deep Encoders(深度编码器)
 
@@ -53,7 +53,7 @@ $y_{v}\in\left\{0,1\right\}$ 是节点类标签。$z_{v}$ 是编码器的输出�
 
 ### Inductive Capability(归纳能力)
 
-GCN可以应用在图中看不见的节点。例如，如果使用节点 $A,B,C$ 训练模型，由于参数在所有节点之间共享，新添加的节点 $D,E,F$ 因此也可以进行评估。<img src="https://i.loli.net/2020/05/16/SdKRmfH4cXtIkjM.png" alt="apply_to_new_nodes" style="zoom:50%;" />
+GCN可以应用在图中看不见的节点。例如，如果使用节点 $A,B,C$ 训练模型，由于参数在所有节点之间共享，新添加的节点 $D,E,F$ 因此也可以进行评估。<img src="/Users/yaso/Desktop/CS224W/notes/images/apply_to_new_nodes.png" alt="apply_to_new_nodes" style="zoom:50%;" />
 
 ### GraphSAGE
 
