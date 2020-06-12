@@ -61,7 +61,7 @@ Key Insights:
 
 **情况1: A-w-B**
 
-<img src="https://i.loli.net/2020/05/16/QWfix4s2VaYHZDJ.jpg" style="zoom:100%;" />
+<img src="https://i.loli.net/2020/05/16/QWfix4s2VaYHZDJ.jpg" style="zoom: 33%;" />
 
 w 的收益为: *A: a, B: 1, AB: a+1-c*
 

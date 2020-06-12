@@ -66,7 +66,9 @@ $$
 
 我们可以将这些概念进一步扩展到有向图，将强连接的有向图定义为一个有从某个节点到任何其他节点的路径的图,反之亦然，(即同时具有A→B和B→A的路径)。如果忽略边缘方向，则将形成一个弱连接的有向图。我们进一步将强连接组件(SCCs)定义为 $G$ 的强连接子图。可以到达SCC的节点是其内部组件的一部分，可以从SCC到达的节点是其外部组件的一部分。
 
-下图虽然已连接但不是强连接图，包含了一个SCC(图 $G'=G[A,B,C]$ )。<img src="https://i.loli.net/2020/05/16/lQwopUVYiBH2u3h.png" style="zoom:100%;" />
+下图虽然已连接但不是强连接图，包含了一个SCC(图 $G'=G[A,B,C]$ )。
+
+<img src="https://i.loli.net/2020/05/16/lQwopUVYiBH2u3h.png" style="zoom:100%;" />
 
 ### Representing Graphs
 
