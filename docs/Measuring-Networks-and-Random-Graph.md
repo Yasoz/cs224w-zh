@@ -113,7 +113,9 @@ $$
 
 #### The Connectivity of $G_{np}$
 
-下图显示了随机图 $G_{np}$ 的演变。我们可以看到当平均度 $\bar{k}=2E/n$ 或 $p=\bar{k}/(n-1)$ 时，出现了一个巨大的连通组件。如果 $k=1-\epsilon$ ，则所有组件的大小均符合 $\Omega(\log n)$。如果 $\bar{k}=1+\epsilon$ ，则存在1个连通组件的大小为 $\Omega(n)$，而所有其他组件大小都为 $\Omega(\log n)$。换句话说，如果 $\bar{k}>1$，我们希望具有一个大的连通组件。另外，在这种情况下，每个节点在期望中至少具有一条边。<img src="https://i.loli.net/2020/06/12/Mx9aKXgq4EcyR7k.png" alt="evol_of_rand_graph" style="zoom:90%;" />
+下图显示了随机图 $G_{np}$ 的演变。我们可以看到当平均度 $\bar{k}=2E/n$ 或 $p=\bar{k}/(n-1)$ 时，出现了一个巨大的连通组件。如果 $k=1-\epsilon$ ，则所有组件的大小均符合 $\Omega(\log n)$。如果 $\bar{k}=1+\epsilon$ ，则存在1个连通组件的大小为 $\Omega(n)$，而所有其他组件大小都为 $\Omega(\log n)$。换句话说，如果 $\bar{k}>1$，我们希望具有一个大的连通组件。另外，在这种情况下，每个节点在期望中至少具有一条边。
+
+<img src="https://i.loli.net/2020/06/12/Mx9aKXgq4EcyR7k.png" alt="evol_of_rand_graph" style="zoom:90%;" />
 
 #### Analyzing the Properties of $G_{np}$
 
@@ -142,7 +144,7 @@ $$
 1. 从低维度的常规环开始，通过将每个节点连接到右侧的 $k$ 个邻居和左侧的 $k$ 个邻居， $k\geq2$ 。
 2. 通过将端点移动到随机选择的节点，以概率 $p$ 重新连接每条边(重新布线)。
 
-![small_world](https://i.loli.net/2020/06/12/MQYa6uWqE9fAIV5.png)
+<img src="https://i.loli.net/2020/06/12/MQYa6uWqE9fAIV5.png" alt="small_world" style="zoom:50%;" />
 
 然后，我们进行以下观察：
 
