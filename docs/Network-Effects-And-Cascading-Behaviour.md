@@ -40,7 +40,8 @@ Twitter用户是无向网络图。70个与2011年西班牙反紧缩抗议活动�
 
 Key Insights:
 
-- 激活阈值的分布具有两个局部峰值: i)在 $\frac{k_{a}}{k_{in}}\approx 0$ 处，表示许多自活跃用户加入； ii)在 $\frac{k_{a}}{k_{in}}\approx0.5$ 表明一半的用户在邻居加入后加入。其余大部分分布均匀。<img src="https://i.loli.net/2020/05/16/u91S5i2oPVhMEH4.jpg" style="zoom:30%;" />
+- 激活阈值的分布具有两个局部峰值: i)在 $\frac{k_{a}}{k_{in}}\approx 0$ 处，表示许多自活跃用户加入； ii)在 $\frac{k_{a}}{k_{in}}\approx0.5$ 表明一半的用户在邻居加入后加入。其余大部分分布均匀。
+- <img src="https://i.loli.net/2020/05/16/u91S5i2oPVhMEH4.jpg" style="zoom:30%;" />
 - 加入运动的邻居数量“爆发”对阈值较高的用户影响较大，而阈值较低的用户影响较小
 - 多数级联很小
 - 更大的级联是由具有更高核心数(即更核心)的用户启动的。k-core被定义为每一个节点具有至少度为k的最大连通子图，并且可以通过迭代地移除与节点度小于k的节点进行评估<img src="https://i.loli.net/2020/05/16/dYCM2jD6QBomcKv.png" style="zoom:30%;" />
@@ -69,7 +70,7 @@ w 的收益为: *A: a, B: 1, AB: a+1-c*
 
 **情况2: AB-w-B**
 
-<img src="https://i.loli.net/2020/05/16/Obgd3q4Ce91EtYm.jpg" style="zoom:100%;" />
+<img src="https://i.loli.net/2020/05/16/Obgd3q4Ce91EtYm.jpg" style="zoom: 40%;" />
 
 w 的收益为: *A: a, B: 1, AB: max(a, 1)+1-c*
 
