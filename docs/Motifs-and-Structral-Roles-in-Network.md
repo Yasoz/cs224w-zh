@@ -36,9 +36,10 @@ $$
 <img src="./img/Configuration_Model.png?style=centerme" alt="Figure 2" style="zoom:50%;" />
 
 另一种生成方式如下：
-1) 从一个给定的图 $G$ 开始;
-2) 随机选择一对边 A->B, C->D , 交换端点得到 A->D, C->B, 重复以上步骤 $Q\times \vert E\vert$ 次.
-通过这种方式，我们将获得一个具有相同节点度和随机重新连接边的随机重连接图。
+
+1.  从一个给定的图 $G$ 开始;
+2. 随机选择一对边 A->B, C->D , 交换端点得到 A->D, C->B, 重复以上步骤 $Q\times \vert E\vert$ 次.
+   通过这种方式，我们将获得一个具有相同节点度和随机重新连接边的随机重连接图。
 
 ### Graphlets
 
@@ -47,8 +48,10 @@ $$
 ### Finding Motifs and Graphlets
 
 找到大小为 $k$ 的 Motifs 或 Graphlet 需要我们：
-1）列举所有大小为 $k$ 的相连子图；
-2）计算每种子图类型的出现次数。
+
+1. 列举所有大小为 $k$ 的相连子图；
+2. 计算每种子图类型的出现次数。
+
 仅知道图中是否存在某个子图是一个艰巨的计算问题。而且，计算时间随着 Motifs 或 Graphlet 的大小增加而呈指数增长。
 
 ### ESU Algorithm
