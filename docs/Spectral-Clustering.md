@@ -19,11 +19,11 @@
 
 由于我们要尽量减少 $A$ 和 $B$ 之间的连接数, 我们可能会决定以**最小割**为我们的优化目标。但是我们发现这种方式最终会产生非常不直观的集群——我们通常可以简单地设置 $A$ 为一个几乎没有传出连接的单节点，$B$ 为网络中的其它部分，从而获得一个很小的**割**。而我们需要的是一种衡量内部集群连接性的方法。
 
-引入**传导性**(**conductance**)可以平衡组内和组间连接性的问题。我们定义传导性为 $\phi(A, B) = \frac{cut(A, B)}{min(vol(A), vol(B))}$ 其中$vol(A) = \sum_{i \in A} k_i$ 是节点 $A$ 的总（加权）度。可以粗略地认为传导性类似于表面积与体积之比：分子为 $A$ 和 $B$ 共享曲面的面积，同时分母努力确保 $A$ 和 $B$ 之间具有相似的体积。由于采取这种措施 ，选择 $A$ 和 $B$ 并且最小化它们的传导性，相比最小化割具有更均衡的分区。 由于要最大程度地减小电导是一个NP-hard问题，因此面临的挑战是如何有效地找到一个良好的分区。
+引入**传导性**(**conductance**)可以平衡组内和组间连接性的问题。我们定义传导性为 $\phi(A, B) = \frac{cut(A, B)}{min(vol(A), vol(B))}$ 其中$vol(A) = \sum_{i \in A} k_i$ 是节点 $A$ 的总（加权）度。可以粗略地认为传导性类似于表面积与体积之比：分子为 $A$ 和 $B$ 共享曲面的面积，同时分母努力确保 $A$ 和 $B$ 之间具有相似的体积。由于采取这种方法 ，选择 $A$ 和 $B$ 并且最小化它们的传导性，相比最小化割具有更均衡的分区。 由于要最大程度地减小电导是一个NP-hard问题，因此如何有效地找到一个良好的分区是现在需要面临的挑战。
 
 ### Spectral Graph Partitioning
 
-频谱图分区是一种允许我们使用特征向量确定传导性的方法。我们将从介绍频谱图理论的一些基本技术开始。
+频谱图分割是一种允许我们使用特征向量确定传导性的方法。我们将从介绍频谱图理论的一些基本技术开始。
 
 频谱图理论的目的是分析代表图形的矩阵的“频谱”。所谓频谱是指表示图的矩阵，按照其幅值大小排序及其对应的特征值 $\lambda_{i}$ 的集合 $\Lambda = \{\lambda_1, \ldots, \lambda_n\}$ 。比如d-正则图的邻接矩阵的最大特征向量/特征值对是全一向量  $x = (1, 1, \ldots, 1)$, 并且特征值 $\lambda = d$。练习：具有两个分量（每个分量为d-regular）的不连续图的特征向量是什么？注意，根据谱定理，邻接矩阵（是实数和对称的）具有正交特征向量的完整谱。
 
@@ -43,36 +43,45 @@ $$
 
 $\lambda_2$ 与我们找到图的最佳分割的最初目标有何关系？让我们将分区 $(A,B)$ 表示为向量 $y$ ，并且 $y_i = 1$ if $i \in A$ and $y_i = -1$ if $i \in B$。 我们先尝试在执行分区大小平衡问题 ($\vert A\vert = \vert B\vert$) 的同时尽量减少割，而不是使用传导性，这就相当于 $\sum_{i}y_{i}=0$。基于这个大小限制，可以最小化分区的割。比如寻找 $y$ 最小化 $\sum_{(i, j) \in E} (y_i - y_j)^2$ ， $y$ 的值必须是 $+1$ 或者 $-1$ ，这样会使得 $y$ 的长度是固定的。这个优化问题看起来很像 $\lambda_2$ 的定义，事实上根据上述发现，我们可以通过最小化拉普拉斯矩阵的 $\lambda_2$ 达成这一目标，并且最佳聚类 $y$ 由其对应的特征向量（称为Fiedler向量）给出。
 
-Now that we have a link between an eigenvalue of $$L$$ and graph partitioning, let's push the connection further and see if we can get rid of the hard $$\vert A\vert = \vert B\vert$$ constraint -- maybe there is a link between the more flexible conductance measure and $$\lambda_2$$. Let's rephrase conductance here in the following way: if a graph $$G$$ is partitioned into $$A$$ and $$B$$ where $$\vert A\vert \leq \vert B\vert$$, then the conductance of the cut is defined as $$\beta = cut(A, B)/\vert A\vert$$. A result called the Cheeger inequality links $$\beta$$ to $$\lambda_2$$: in particular, $$\frac{\beta^2}{2k_{max}} \leq \lambda_2 \leq 2\beta$$ where $$k_{max}$$ is the maximum node degree in the graph. The upper bound on $$\lambda_2$$ is most useful to us for graph partitioning, since we are trying to minimize the conductance; it says that $$\lambda_2$$ gives us a good estimate of the conductance -- we never overestimate it more than by a factor of 2! The corresponding eigenvector $$x$$ is defined by $$x_i = -1/a$$ if $$i \in A$$ and $$x_j = 1/b$$ if $$i \in B$$; the signs of the entries of $$x$$ give us the partition assignments of each node.
+现在，我们已经在 $L$ 的特征值和图划分之间建立了联系，让我们进一步推动连接，看看是否可以摆脱硬约束 $\vert A\vert = \vert B\vert$ ，也许更灵活的传导性度量与 $\lambda_2$ 之间存在某种关系。在这里我们重新定义传导性：如果图 $G$ 被分为 $A$ 和 $B$ 且 $\vert A\vert \le \vert B\vert$ ，那么割的传导性定义为$\beta = cut(A, B)/\vert A\vert$。这将 $\beta$ 和$\lambda_2$ 建立了关系：特别的 $\frac{\beta^2}{2k_{max}} \leq \lambda_2 \leq 2\beta$，其中 $k_ {max}$是图中的最大节点度，这个不等式称之为Cheeger不等式。由于我们需要最小化传导性 $\beta$，因此 $\lambda_2$ 的上界在图分割中非常有用，该不等式可以使我们能够很好地估计传导性 $\beta$。相应的特征向量被定义为:
+$$
+x_{i}=\left\{\begin{array}{ll}
+-\frac{1}{a} & \text { if } i \in A \\
++\frac{1}{b} & \text { if } i \in B
+\end{array}\right.
+$$
+$x_i$ 的符号对应于每个节点的分配。
 
-# Spectral Partitioning Algorithm
+### Spectral Partitioning Algorithm
 
-Let's put all our findings together to state the spectral partitioning algorithm.
+将所有已知汇总起来说明频谱分割算法。
 
-1. Preprocessing: build the Laplacian matrix $$L$$ of the graph
-2. Decomposition: map vertices to their corresponding entries in the second eigenvector
-3. Grouping: sort these entries and split the list in two to arrive at a graph partition
+1. 预处理：构建图的拉普拉斯矩阵 $L$
+2. 分解：将顶点映射到第二个特征向量中的相应值
+3. 分组：对这些值进行排序，并将列表一分为二，以得出图分区
 
-Some practical considerations emerge.
+<img src="./img/Spectral Partitioning Algorithm.png?style=centerme" alt="Figure 1" style="zoom:70%;" />
 
-- How do we choose a splitting point in step 3? There's flexibility here -- we can use simple approaches like splitting at zero or the median value, or more expensive approaches like minimizing the normalized cut in one dimension.
-- How do we partition a graph into more than two clusters? We could divide the graph into two clusters, then further subdivide those clusters, etc (Hagen et al '92)...but that can be inefficient and unstable. Instead, we can cluster using multiple eigenvectors, letting each node be represented by its component in these eigenvectors, then cluster these representations, e.g. through k-means (Shi-Malik '00), which is commonly used in recent papers. This method is also more principled in the sense that it approximates the optimal k-way normalized cut, emphasizes cohesive clusters and maps points to a well-separated embedded space. Furthermore, using an eigenvector basis ensures that less information is lost, since we can choose to keep the (more informative) components corresponding to bigger eigenvalues.
-- How do we select the number of clusters? We can try to pick the number of clusters $$k$$ to maximize the **eigengap**, the absolute difference between two consecutive eigenvalues (ordered by descending magnitude).
+一些需要考虑的实际情况
 
-# Motif-Based Spectral Clustering
+- 如何在第3步中选择分割点？这里比较灵活——既可以使用简单的方法（例如零分割或中值分割），也可以使用更复杂的方法（例如最小化一维的标准化切割）。
+- 如何将图划分为两个以上的集群？可以将图先分为两个簇，然后再细分这些簇，依此类推（Hagen等人，92）但这可能是效率低下且不稳定的。取而代之的是，可以使用多个特征向量进行聚类，让每个节点由其在这些特征向量中的组成表示，然后对这些表示进行聚类，例如通过k-means（Shi-Malik '00）聚类，这种方法在最近的论文中经常使用。从某种意义上说，该方法在原理上也更为可靠，它近似于最佳的K-way归一化切割，强调了内部聚类并将点映射到一个充分分离的嵌入式空间。此外，使用特征向量可尽量减少丢失的信息，因为我们可以选择使（更多信息）分量与更大的特征值相对应。
+- 如何选择簇数？我们可以尝试选择聚类数 $k$ 以最大化**eigengap**，**eigengap**即两个连续特征值之间的绝对差（按降序排列）。
 
-What if we want to cluster by higher-level patterns than raw edges? We can instead cluster graph motifs into "modules". We can do everything in an analogous way. Let's start by proposing analogous definitions for cut, volume and conductance:
+### Motif-Based Spectral Clustering
 
-- $$cut_M(S)$$ is the number of motifs for which some nodes in the motif are in one side of the cut and the rest of the nodes are in the other cut
-- $$vol_M(S)$$ is the number of motif endpoints in $$S$$ for the motif $$M$$
-- We define $$\phi(S) = cut_M(S) / vol_M(S)$$
+如果我们想通过比原始边更高级别的模式进行聚类怎么办？我们可以将图形 **Motif **聚类为“模块”。并以类似的方式做所有事情。先从提出关于割，体积和传导性的类似定义开始：
 
-How do we find clusters of motifs? Given a motif $$M$$ and graph $$G$$, we'd like to find a set of nodes $$S$$ that minimizes $$\phi_M(S)$$. This problem is NP-hard, so we will again make use of spectral methods, namely **motif spectral clustering**:
+- $cut_M(S)$ 是 Motif 的数量，其中Motif中的某些节点位于割的一侧，而其余节点在割的另一侧
+- $vol_M(S)$ 是Motif $M$ 中终点在 $S$ 的端点数
+- 定义 $\phi(S) = cut_M(S) / vol_M(S)$
 
-1. Preprocessing: create a matrix $$W^{(M)}$$ defined by $$W_{ij}^{(M)}$$ equals the number of times edge $$(i, j)$$ participates in $$M$$.
-2. Decomposition: use standard spectral clustering on $$W^{(M)}$$.
-3. Grouping: same as standard spectral clustering
+我们如何找到Motif簇? 给定一个Motif $M$ 和图 $G$ ，我们需要找到一组节点 $S$ 从而最小化 $\phi_M(S)$。 这是一个NP-hard 问题，因此我们将再次使用谱方法，即**Motif谱聚类**：
 
-Again, we can prove a motif version of the Cheeger inequality to show that the motif conductance found by our algorithm is bounded above by $$4\sqrt{\phi_M^*}$$, where $$\phi_M^*$$ is the optimal conductance.
+1. 预处理: 创建一个矩阵 $W^{(M)}$， $W_{ij}^{(M)}$ 表示边 $(i, j)$ 在 $M$ 中出现的次数
+2. 分解: 对矩阵 $W^{(M)}$ 使用标准谱聚类
+3. 分组: 与标准谱聚类相同
 
-We can apply this method to cluster the food web (which has motifs dictated by biology) and gene regulatory networks (in which directed, signed triads pla
+同样，我们可以有一个 Cheeger 不等式的 motif 形式：$\phi_{M}(S) \leq 4 \sqrt{\phi_{M}^{*}}$ ，其中 $\phi_{M}^{*}$ 是最佳传导性。
+
+基于Motif的谱聚类方法可以应用于食物网（motif由生物学决定）和基因调控网络。
