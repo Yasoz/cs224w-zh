@@ -1,71 +1,65 @@
----
-layout: post
-title: Message Passing and Node Classification
----
+## Message Passing and Node Classification
 
+### Node Classification
 
-## Node Classification
+<img src="/img/node_classification.png?style=centerme" alt="node_classification" style="zoom: 50%;" />
 
-![node_classification](../assets/img/node_classification.png?style=centerme)
+节点分类是在给定一组现有节点标签的情况下，将标签分配给图中的节点的过程。此相当于半监督学习过程。虽然可以在现实环境中收集每个节点的真实标签值，但是收集这些标签非常昂贵。因此，我们依靠随机抽样来获得这些标签。然后，我们使用标签的小样本来开发模型，从而为图中的节点生成可信赖的标签预测。
 
-Node Classification is the process of assigning labels to nodes within a graph, given a set of existing node labels. This setting corresponds to a semi-supervised setting. While it would be nice to be able to collect the true label values of every node, oftentimes, in real world settings, it is extremely expensive to collect those labels. Consequently, we rely on random sampling to obtain these labels.  Then we use that small sample of labels to develop models that generate trustworthy node label predictions for our graph.
+集体分类是一个描述我们如何为网络中的所有节点分配标签的笼统术语。我们在网络上传播这些标签中的信息，并尝试使每个节点分配的标签稳定。之所以可以实现这一任务，是因为网络具有特殊的属性，尤其是节点之间的相关性，这使得我们可以利用它们来构建分类器。本质上，集体分类依赖于马尔可夫假设（节点 $Y_i$ 的标签取决于该节点令居节点的标签），其数学形式为：
+$$
+P(Y_i|i)=P(Y_i|N_i)
+$$
+主要有三种方法用于分类：关系分类，迭代分类和信念分类，大致按这些方法的先进程度排序。
 
-Collective Classification is an umbrella term describing how we assign labels to all nodes in the network together. We then propagate the information from these labels around the network and attempt to come up with stable assignments for each node. We are able to do these tasks because networks have special properties, specifically, correlations between nodes,  that we can leverage to build  our predictor. Essentially, collective classification relies on the Markov Assumption that the labely $$Y_i$$ of one node depends on the labels of its neighbors, which can be mathematically written as:
+### Correlations in a Network
 
-$$ P(Y_i\vert i) = P(Y_i\vert N_i)$$
+在网络环境中，各个行为是相关的。这些相关性通常由三种主要现象导致：趋同性，影响力和混淆性。 
 
+<img src="/img/graph_correlations.png?style=centerme" alt="graph_correlations" style="zoom: 50%;" />
 
+#### Homophily
 
-The three main techniques that are used are Relational Classification, Iterative Classification, and Belief Classification, roughly ordered byhow advanced these methods are.
+*"Birds of a feather flock together"*（物以类聚，人以群分）
 
-## Correlations in a Network
+趋同性通常是指个体倾向于与其相似的他人交往和联系。例如，在社交网络中，相似之处可以包括各种属性，包括年龄，性别，组织隶属关系，品味等等。例如，喜欢同一网络的个人可能会更紧密地联系在一起，因为他们可能在音乐会上或者在音乐论坛中见面和互动。这种现象通常可以反映在我们的朋友关系中，如下图所示，*Easley and Kleinberg(2010* 在种族中通过簇来展示朋友关系。
 
-Individual behaviors are correlated in a network environment. These correlations are often the result of three main types of phenomena: Homophily, Influence, and Confounding. 
+<img src="/img/homophily.png?style=centerme" alt="homophily" style="zoom:50%;" />
 
-![graph_correlations](../assets/img/graph_correlations.png?style=centerme)
+此外，在政治生活中我们也可以看到这种趋势。个人倾向于根据他人的政治观点来选择朋友。
 
-### ***Homophily***
+<img src="/img/homophily2.png?style=centerme" alt="homophily2" style="zoom:50%;" />
 
-*"Birds of a feather flock together"*
+#### Influence
 
-Homophily generally refers to the tendency of individuals to  associate and bond with similar others. Similarities, for instance in a social network, can include a variety of attributes, including age, gender, organizational affiliation, taste, and more. For instance, individuals who like the same network may associate more closely together because they meet and interact at concerts or interact in music forums. This phenomena can often be reflected in our friendships, as in the graph below where *Easley and Kleinberg* (2010) demonstrate the homophily by race in friendships.
+另一个可以证明网络可以展示相关性的因素是影响。在这种情况下，形成的连接和边会影响节点本身的行为。在一个社交网络中，每个人都可能受到他们的朋友的影响。例如，一个朋友可能会推荐一种你可能感兴趣的音乐，然后你也可以将该喜好传递给你的朋友。
 
-![homophily](../assets/img/homophily.png?style=centerme)
+#### Confounding
 
-Additionally, in our politics, we can also see this trend. Individuals tend to segregate friendships based on their political views:
+混杂变量会导致节点表现出相似的特征。例如，我们所处的环境可能会在多个方面影响我们的相似性，从我们的语言，我们的音乐品味到我们的政治偏好。
 
-![homophily2](../assets/img/homophily2.png?style=centerme)
+### Leveraging Network Correlations for Classification of Network Data
 
-### *Influence*
+#### Guilt-by-association
 
-Another example of why networks may demonstrate correlations is Influence. Under these circumstances, the links and edges formed can influence the behavior of the node itself. Think of a social network, where each individual may be influenced by their friends--for instance, a friend may recommend a musical preference which you then become interested in, and you may then pass that preference on to your friends as well.
+如果一个节点连接到具有特定标签的另一个节点，根据马尔科夫假设，这两个节点更有可能具有相同的标签。例如，如果我的朋友都是意大利人，那么根据我们上面讨论的网络相关性，我自己也更可能是意大利人。这种方法在多个域中具有广泛的应用，比如可以用于例如区分恶意网页和良性网页。恶意网页往往会相互链接以提高曝光度和可信度，并且使之在搜索引擎中排名更高。
 
-### *Confounding*
+#### Performing guilt-by-association node classification
 
-Confounding variables can cause nodes to exhibit similar characteristics. For instance, the environment we are raised in may influence our similarity in multiple dimensions, from the language we speak, to our music tastes, to our political preferences.
+特定节点 X 是否属于特定标签可以取决于多种因素。在本文中，最常见的包括：
 
-## **Leveraging Network Correlations for Classification of Network Data**
+* X 的特点
+* X 附近对象的标签
+* X 附近对象的特征
 
-### *"Guilt-by-association"*
+但是，如果我们仅使用以上这些因素而不使用网络属性，那么我们只会在这些特征上训练简单的分类器。为了能够实现集体分类，我们还需要考虑网络拓扑。集体分类需要以下三个组成部分：
 
-If a node is connected to another node with a particular label, then that node is more likely to share the same label, as the Markov assumption tells us. For instance, if my friends are all Italian, I am more likely to be Italian myself, based on the network correlations we discussed above. This approach has broad utility across multiple domains, and can be used, for instance, for distinguishing malicious and benign webpages. Malicious webpages tend to link to one another in order to increase visibility, look credible, and rank higher in search engines. 
-
-### *Performing guilt-by-association node classification*
-
-Whether or not a particular node X receives a particular label may depend on a variety of factors. In our context, those most commonly include:
-
-* Features of X
-* Labels of the objects in X's neighborhood
-* Features of the objects in X's neighborhood
-
-However, if we were to be using only these features, and not network properties, we would only be training a plain classifier on these featuers. In order for us to perform collective classification, we also need to take into account the network topology. Collective classification requires the 3 components listed below:
-
-* A **local classifier** to assign initial labels
-  * This standard classifier will predict labels based on node attributes/features, without incorporating network information. We can use pretty much any classifier here, even kNNs perform reasonably well.
-* A **relational classifier** is useful because it allows us to capture correlations (e.g. the homophily, influence) between nodes in the network.
-  * This classifier predicts the label of one node based on the labels and features of its neighbors. 
-  * This is the step that incorporates network information. 
-* **Collective inference** propagates the correlations through the network. Basically, we do not want to stop at the level of only using our neighbors, but through multiple iterations we want to be able to spread the contribution of other neighbors to each other.
+* 一个**局部分类器**来分配初始标签
+  * 这个标准分类器将基于节点属性/特征预测标签，而无需网络信息。几乎可以在这里使用任何分类器，即使kNN的表现也相当不错。
+* 一个**相关分类器**捕获网络中的节点之间相关性（趋同性，影响力）。
+  * 该分类器根据其邻居的标签和特征预测节点的标签。
+  * 这一步需要使用网络信息 
+* **集体推理** propagates the correlations through the network. Basically, we do not want to stop at the level of only using our neighbors, but through multiple iterations we want to be able to spread the contribution of other neighbors to each other.
   * This is an iterative series of steps that applies the relational classifer to each node in succession, and iterates until the inconsistency between neighboring node labels is minimized, or until we have reached our maximum iterations and run out of computational resources.
   * Node structure has a profound impact on the final predictions.
 
