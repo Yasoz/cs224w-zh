@@ -11,22 +11,23 @@
 ### Linear Threshold Model
 在线性阈值模型中，我们具有以下设定：
 
-- 一个节点$$v$$ 具有随机阈值 $$\theta_{v} \sim U[0,1]$$
-- A node $$v$$ influenced by each neighbor $$w$$ according to a weight $$b_{v,w}$$, such that
+- 一个节点 $v$ 具有随机阈值 $$\theta_{v} \sim U[0,1]$$
+- 一个节点 $v$ 受每个邻居 $w$ 的影响 ，基于节点 $v$ 和 $w$ 之间的权重 $b_{v,w}$，且
 
 $$
 \sum_{w\text{ neighbor of v }} b_{v,w}\leq 1
 $$
 
-- A node $$v$$ becomes active when at least $$\theta_{v}$$ fraction of its neighbors are active. That is
+- 一个节点 vv 当至少 θvθv其邻居的一部分是活跃的。那是
+- 当节点 $v$ 至少 $\theta_{v}$ 的邻居活跃时，节点 $v$ 才活跃，即，
 
 $$
 \sum_{w\text{ active neighbor of v }} b_{v,w}\geq\theta_{v}
 $$
 
-The following figure demonstrates the process:
+下图演示了该过程：
 
-![linear_threshold_model_demo](../assets/img/influence_maximization_linear_threshold_model_demo.png?style=centerme)
+![linear_threshold_model_demo](../docs/img/influence_maximization_linear_threshold_model_demo.png?style=centerme)
 
 *(A) node V is activated and influences W and U by 0.5 and 0.2, respectively; (B) W becomes activated and influences X and U by 0.5 and 0.3, respectively; (C) U becomes activated and influences X and Y by 0.1 and 0.2, respectively; (D) X becomes activated and influences Y by 0.2; no more nodes can be activated; process stops.*
 
