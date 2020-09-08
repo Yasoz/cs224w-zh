@@ -29,37 +29,37 @@ $$
 
 ![linear_threshold_model_demo](../docs/img/influence_maximization_linear_threshold_model_demo.png?style=centerme)
 
-*(A) node V is activated and influences W and U by 0.5 and 0.2, respectively; (B) W becomes activated and influences X and U by 0.5 and 0.3, respectively; (C) U becomes activated and influences X and Y by 0.1 and 0.2, respectively; (D) X becomes activated and influences Y by 0.2; no more nodes can be activated; process stops.*
+(A) 节点 V 被激活，且对 W 和 U 的影响分别为0.5和0.2 is； (B) W 被激活，对 X 和 U 的影响分别为0.5和0.3； (C) U 被激活并分别以0.1和0.2影响 X和 Y；(D) X 被激活并以0.2影响 Y，此时不能再激活任何节点；过程停止。
 
-## Independent Cascade Model
-In this model, we model the influences (activation) of nodes based on probabilities in a directed graph:
+### Independent Cascade Model
+在此模型中，我们根据有向图中的概率对节点的影响（激活）进行建模：
 
-- Given a directed finite graph $$G=(V, E)$$
-- Given a node set $$S$$ starts with a new behavior (e.g. adopted new product and we say they are active)
-- Each edge $$(v, w)$$ has a probability $$p_{vw}$$
-- If node $$v$$ becomes active, it gets one chance to make $$w$$ active with probability $$p_{vw}$$
-- Activation spread through the network
+- 给定有限图 $$G=(V, E)$$
+- 从新的行为开始（例如采用新产品，我们说它们是活跃的）给定一个节点集  $$S$$ 
+- 每条边 $$(v, w)$$ 具有概率 $$p_{vw}$$
+- 如果节点 $$v$$ 被激活, 则有机会利用概率 $p_{vw}$ 1去激活节点 $$w$$ 
+- 通过网络传播激活
 
-Note:
+注意:
 
-- Each edge fires only once
-- If $$u$$ and $$v$$ are both active and link to $$w$$, it does not matter which tries to activate $$w$$ first
+- 没个边仅建立一次
+- 如果 $u$ 和 $v$ 都处于激活状态并且与 $w$ 相连，哪个节点先去激活 $w$ 并不重要
 
-## Influential Maximization (of the Independent Cascade Model)
+### Influential Maximization (of the Independent Cascade Model)
 
-### Definitions
-- **Most influential Set of size $$k$$** ($$k$$ is a user-defined parameter) is a set $$S$$ containing $$k$$ nodes that if activated, produces the largest expected{% include sidenote.html id='note-most-influential-set' note='Why "expected cascade size"? Due to the stochastic nature of the Independent Cascade Model, node activation is a random process, and therefore, $$f(S)$$ is a random variable. In practice, we would like to compute many random simulations and then obtain the expected value $$f(S)=\frac{1}{\mid I\mid}\sum_{i\in I}f_{i}(S)$$, where $$I$$ is a set of simulations.' %} cascade size $$f(S)$$.
-- **Influence set $$X_{u}$$ of node $$u$$** is the set of nodes that will be eventually activated by node $$u$$. An example is shown below.
+#### Definitions
+- **最具影响力的集合大小 $$k$$** ($$k$$ 用户定义参数) 是包含 $k$ 个节点的集合 $S$ 。这些节点如果被激活则会产生最大预期级联大小 $$f(S)$$。[为什么是“预期的级联大小”？由于独立级联模型的随机性，节点激活是一个随机过程，因此，$$f(S)$$ 是一个随机变量。在实践中，我们通常计算许多的随机模拟从而获得期望值 $$f(S)=\frac{1}{\mid I\mid}\sum_{i\in I}f_{i}(S)$$，其中 $$I$$ 表示一组模拟]
+- **节点 $u$ 的影响集 $$X_{u}$$** 是最终将被节点 $u$ 激活的节点集合，示例如下所示
 
-![influence_set](../assets/img/influence_maximization_influence_set.png?style=centerme)
+<img src="./img/influence_maximization_influence_set.png?style=centerme" alt="influence_set" style="zoom:67%;" />
 
-*Red-colored nodes a and b are active. The two green areas enclose the nodes activated by a and b respectively, i.e. $$X_{a}$$ and $$X_{b}$$.*
+红色节点 $a$ 和 $b$ 都处于激活状态，两个绿色的区域分别表示由节点 $a$ 和 $b$ 激活的节点集，比如 $$X_{a}$$ 和 $$X_{b}$$。
 
-Note:
-- It is clear that $$f(S)$$ is the size of the union of $$X_{u}$$: $$f(S)=\mid\cup_{u\in S}X_{u}\mid$$.
-- Set $$S$$ is more influential, if $$f(S)$$ is larger
+注意：
+- $$f(S)$$ 是集合 $$X_{u}$$ 的并集，即: $$f(S)=\mid\cup_{u\in S}X_{u}\mid$$。
+- 如果 $$f(S)$$ 越大，表示集合 $S$ 更具有影响力
 
-### Problem Setup
+#### Problem Setup
 The influential maximization problem is then an optimization problem:
 
 $$
