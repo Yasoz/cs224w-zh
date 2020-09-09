@@ -2,6 +2,7 @@
 * [Measuring Networks and Random Graph](Measuring-Networks-and-Random-Graph.md)
 * [Motifs and Structral Roles in Network](Motifs-and-Structral-Roles-in-Network.md)
 * [Spectral Clustering](Spectral-Clustering.md)
+* [Influence Maximization](Influence-Maximization.md)
 * [Generative Models for Graphs](Generative-Models-for-Graphs)
 * [Graph Neural Network](Graph-Neural-Network)
 * [Network Effects And Cascading Behaviour](Network-Effects-And-Cascading-Behaviour)
