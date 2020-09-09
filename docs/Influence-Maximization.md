@@ -47,7 +47,7 @@ $$
 
 ### Influential Maximization (of the Independent Cascade Model)
 
-#### Definitions
+#### 定义
 - **最具影响力的集合大小 $$k$$** ($$k$$ 用户定义参数) 是包含 $k$ 个节点的集合 $S$ 。这些节点如果被激活则会产生最大预期级联大小 $$f(S)$$。[为什么是“预期的级联大小”？由于独立级联模型的随机性，节点激活是一个随机过程，因此，$$f(S)$$ 是一个随机变量。在实践中，我们通常计算许多的随机模拟从而获得期望值 $$f(S)=\frac{1}{\mid I\mid}\sum_{i\in I}f_{i}(S)$$，其中 $$I$$ 表示一组模拟]
 - **节点 $u$ 的影响集 $$X_{u}$$** 是最终将被节点 $u$ 激活的节点集合，示例如下所示
 
@@ -59,92 +59,94 @@ $$
 - $$f(S)$$ 是集合 $$X_{u}$$ 的并集，即: $$f(S)=\mid\cup_{u\in S}X_{u}\mid$$。
 - 如果 $$f(S)$$ 越大，表示集合 $S$ 更具有影响力
 
-#### Problem Setup
-The influential maximization problem is then an optimization problem:
+#### 问题设定
+那么，有影响力的最大化问题就是一个优化问题：
 
 $$
 \max_{S \text{ of size }k}f(S)
 $$
 
-This problem is NP-hard [[Kempe et al. 2003]](https://www.cs.cornell.edu/home/kleinber/kdd03-inf.pdf). However, there is a greedy approximation algorithm--**Hill Climbing** that gives a solution $$S$$ with the following approximation guarantee:
+这个问题是一个NP-hard 问题[[Kempe et al. 2003]](https://www.cs.cornell.edu/home/kleinber/kdd03-inf.pdf)。但是，有一个贪婪近似算法（**Hill Climbing**）可以为 $S$ 给出以下近似保证的解：
 
 $$
 f(S)\geq(1-\frac{1}{e})f(OPT)
 $$
 
-where $$OPT$$ is the globally optimal solution.
+其中 $$OPT$$ 是全局最佳解。
 
-### Hill Climbing
-**Algorithm:** at each step $$i$$, activate and pick the node $$u$$ that has the largest marginal gain $$\max_{u}f(S_{i-1}\cup\{u\})$$:
+#### Hill Climbing
 
-- Start with $$S_{0}=\{\}$$
-- For $$i=1...k$$
-  - Activate node $$u\in V\setminus S_{i-1}$$ that $$\max_{u}f(S_{i-1}\cup\{u\})$$
-  - Let $$S_{i}=S_{i-1}\cup\{u\}$$
+**算法：** 在每一步 $$i$$，激活并选择具有最大边际收益 $$\max_{u}f(S_{i-1}\cup\{u\})$$ 的节点 $u$ ：
 
-**Claim:** Hill Climbing produces a solution that has the approximation guarantee $$f(S)\geq(1-\frac{1}{e})f(OPT)$$.
+- 初始 $$S_{0}=\{\}$$
+- 对于 $$i=1...k$$
+  - 激活节点 $$u\in V\setminus S_{i-1}$$ 且 $$\max_{u}f(S_{i-1}\cup\{u\})$$
+  - 令$$S_{i}=S_{i-1}\cup\{u\}$$
 
-### Proof of the Approximation Guarantee of Hill Climbing
-**Definition of Monotone:** if $$f(\emptyset)=0$$ and $$f(S)\leq f(T)$$ for all $$S\subseteq T$$, then $$f(\cdot)$$ is monotone.
+**注意：** Hill Climbing 产生具有近似保证的解 $$f(S)\geq(1-\frac{1}{e})f(OPT)$$.
 
-**Definition of Submodular:** if $$f(S\cup \{u\})-f(S)\geq f(T\cup\{u\})-f(T)$$ for any node $$u$$ and any $$S\subseteq T$$, then $$f(\cdot)$$ is submodular.
+#### Hill Climbing 的逼近证明
+**单调性定义：** 如果 $$f(\emptyset)=0$$ 且对于所有 $$S\subseteq T$$，有 $$f(S)\leq f(T)$$ ，则称 $$f(\cdot)$$ 是单调的。
 
-**Theorem [Nemhauser et al. 1978]:**{% include sidenote.html id='note-nemhauser-theorem' note='also see this [handout](http://web.stanford.edu/class/cs224w/handouts/CS224W_Influence_Maximization_Handout.pdf)' %} if $$f(\cdot)$$ is **monotone** and **submodular**, then the $$S$$ obtained by greedily adding $$k$$ elements that maximize marginal gains satisfies
+**Submodular定义：** 如果对于任何节点 $u$ 和任何集合 $S\subseteq T$ ，有 $$f(S\cup \{u\})-f(S)\geq f(T\cup\{u\})-f(T)$$ ，则称 $f(\cdot)$ 是Submodular。
 
+**定理[Nemhauser et al. 1978]:**（也可以看这个[讲义](http://web.stanford.edu/class/cs224w/handouts/CS224W_Influence_Maximization_Handout.pdf) ），如果 $$f(\cdot)$$ 是**单调**的且为 **submodular**，则 $S$ 可以通过贪心地添加 $k$ 个元素最大化边际收益满足以下条件而获得：
 $$
 f(S)\geq(1-\frac{1}{e})f(OPT)
 $$
 
-Given this theorem, we need to prove that the largest expected cascade size function $$f(\cdot)$$ is monotone and submodular.
+基于这个定理，我们需要证明最大期望级联函数 $f(\cdot)$ 是**单调**的且为 **submodular**。
 
-**It is clear that the function $$f(\cdot)$$ is monotone based on the definition of $$f(\cdot)$${% include sidenote.html id='note-monotone' note='If no nodes are active, then the influence is 0. That is $$f(\emptyset)=0$$. Because activating more nodes will never hurt the influence, $$f(U)\leq f(V)$$ if $$U\subseteq V$$.' %}, and we only need to prove $$f(\cdot)$$ is submodular.**
 
-**Fact 1 of Submodular Functions:** $$f(S)=\mid \cup_{k\in S}X_{k}\mid$$ is submodular, where $$X_{k}$$ is a set. Intuitively, the more sets you already have, the less new "area", a newly added set $$X_{k}$$ will provide.
 
-**Fact 2 of Submodular Functions:** if $$f_{i}(\cdot)$$ are submodular and $$c_{i}\geq0$$, then $$F(\cdot)=\sum_{i}c_{i} f_{i}(\cdot)$$ is also submodular. That is a non-negative linear combination of submodular functions is a submodular function.
+显然，函数 $f(\cdot)$ 是单调的（如果没有节点是激活的，则影响力为0，即 $$f(\emptyset)=0$$，因为激活更多的节点将不会损害影响力，因此：若 $$U\subseteq V$$ 则 $$f(U)\leq f(V)$$）。所以我们只需要证明 $f(\cdot)$ 是 **submodular**。
 
-**Proof that $$f(\cdot)$$ is Submodular**: we run many simulations on graph G (see sidenote 1). For the simulated world $$i$$, the node $$v$$ has an activation set $$X^{i}_{v}$$, then $$f_{i}(S)=\mid\cup_{v\in S}X^{i}_{v}\mid$$ is the size of the cascades of $$S$$ for world $$i$$. Based on Fact 1, $$f_{i}(S)$$ is submodular. The expected influence set size $$f(S)=\frac{1}{\mid I\mid}\sum_{i\in I}f_{i}(S)$$ is also submodular, due to Fact 2. QED.
+**Fact 1 of Submodular Functions:** $$f(S)=\mid \cup_{k\in S}X_{k}\mid$$ 是 submodular, 其中 $$X_{k}$$ 是一个集合。直观上，已经拥有的集合越多，将会有更少的新区域为 $X_{k}$ 提供新的节点。
 
-**Evaluation of $$f(S)$$ and Approximation Guarantee of Hill Climbing In Practice:** how to evaluate $$f(S)$$ is still an open question. The estimation achieved by simulating a number of possible worlds is a good enough evaluation [[Kempe et al. 2003]](https://www.cs.cornell.edu/home/kleinber/kdd03-inf.pdf):
+**Fact 2 of Submodular Functions:** 如果 $$f_{i}(\cdot)$$ 是 submodular 且 $$c_{i}\geq0$$，那么 $$F(\cdot)=\sum_{i}c_{i} f_{i}(\cdot)$$ 也同样是 submodular。即submodular 函数的非负线性组合仍然是 submodular 函数。
 
-- Estimate $$f(S)$$ by repeatedly simulating $$\Omega(n^{\frac{1}{\epsilon}})$$ possible worlds, where $$n$$ is the number of nodes and $$\epsilon$$ is a small positive real number
-- It achieves $$(1\pm \epsilon)$$-approximation to $$f(S)$$
-- Hill Climbing is now a $$(1-\frac{1}{e}-\epsilon)$$-approximation
+**证明 $$f(\cdot)$$ is Submodular：** 我们在图 $G$ 上运行了许多次模拟，对于第 $i$ 次世界的模拟，节点 $v$ 具有激活集 $$X^{i}_{v}$$，且 $$f_{i}(S)=\mid\cup_{v\in S}X^{i}_{v}\mid$$ 是集合 $S$ 的级联大小。基于 **Fact 1**，$f_{i}(\cdot)$ 是submodular。由于 **Fact 2**，期望影响集 $$f(S)=\frac{1}{\mid I\mid}\sum_{i\in I}f_{i}(S)$$ 同样也是submodular。
+
+**在实践中评估 $f(S)$ 和 Hill Climbing 的近似保证：**如何评估 $f(S)$ 仍然是一个开放性的问题，通过对可能的世界进行多次模拟从而获得的估计值是一个很好的评估方法 [[Kempe et al. 2003]](https://www.cs.cornell.edu/home/kleinber/kdd03-inf.pdf)：
+
+- 通过反复模拟估计 $$\Omega(n^{\frac{1}{\epsilon}})$$ 个可能的世界评估 $$f(S)$$，其中 $n$ 是节点的个数，$$\epsilon$$ 是一个很小的正实数
+- 能够达到 $f(S)$ 的 $$(1\pm \epsilon)$$ 逼近
+- Hill Climbing 现在是一个 $$(1-\frac{1}{e}-\epsilon)$$ 逼近算法
 
 ### Speed-up Hill Climbing by Sketch-Based Algorithms
 
-**Time complexity of Hill Climbing**
+#### Hill Climbing的时间复杂度
 
-To find the node $$u$$ that $$\max_{u}f(S_{i-1}\cup\{u\})$$ (see the algorithm above):
+寻找节点 $$u$$ 使得 $$\max_{u}f(S_{i-1}\cup\{u\})$$ (请参见 以上算法):
 
-- we need to evaluate the $$X_{u}$$ (the influence set) of each of the remaining nodes which has the size of $$O(n)$$ ($$n$$ is the number of nodes in $$G$$)
-- for each evaluation, it takes $$O(m)$$ time to flip coins for all the edges involved ($$m$$ is the number of edges in $$G$$)
-- we also need $$R$$ simulations to estimate the influence set ($$R$$ is the number of simulations/possible worlds)
+- 我们需要评估每个大小为 $$O(n)$$ （$n$ 是图 $G$ 中节点的数量）的节点的影响集 $$X_{u}$$
+- 对于每一轮评估，需要花费 $$O(m)$$ 的时间对所有涉及的边进行翻转（$$m$$ 是图 $$G$$ 中的边数)
+- 我们还需要 $R$ 来模拟来估算影响集 （$$R$$ 是模拟次数/可能的世界数）
 
-We will do this $$k$$ (number of nodes to be selected) times. Therefore, the time complexity of Hill Climbing is $$O(k\cdot n \cdot m \cdot R)$$, which is slow. We can use **sketches** [[Cohen et al. 2014]](https://www.microsoft.com/en-us/research/wp-content/uploads/2014/08/skim_TR.pdf) to speed up the evaluation of $$X_{u}$$ by reducing the evaluation time from $$O(m)$$ to $$O(1)$${% include sidenote.html id='note-evaluate-influence' note='Besides sketches, there are other proposed approaches for efficiently evaluating the influence function: approximation by hypergraphs [[Borgs et al. 2012]](https://arxiv.org/pdf/1212.0884.pdf), approximating Riemann sum [[Lucier et al. 2015]](https://people.seas.harvard.edu/~yaron/papers/localApproxInf.pdf), sparsification of influence networks [[Mathioudakis et al. 2011]](https://chato.cl/papers/mathioudakis_bonchi_castillo_gionis_ukkonen_2011_sparsification_influence_networks.pdf), and heuristics, such as degree discount [[Chen et al. 2009]](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/weic-kdd09_influence.pdf).'%}.
+我们将需要这样做 $k$ 次（$k$ 为要选择的节点数）。因此，Hill Climbing 的时间复杂度是 $$O(k\cdot n \cdot m \cdot R)$$，这显然会很慢。我们可以使用 **sketches** [[Cohen et al. 2014]](https://www.microsoft.com/en-us/research/wp-content/uploads/2014/08/skim_TR.pdf) 通过将评估时间从 $$O(m)$$ 降到 $O(1)$ 来加速评估 $X_u$。（除了 sketches 外，还有一些其他的建议方法可以有效地评估影响函数：approximation by hypergraphs [[Borgs et al. 2012]](https://arxiv.org/pdf/1212.0884.pdf), approximating Riemann sum [[Lucier et al. 2015]](https://people.seas.harvard.edu/~yaron/papers/localApproxInf.pdf), sparsification of influence networks [[Mathioudakis et al. 2011]](https://chato.cl/papers/mathioudakis_bonchi_castillo_gionis_ukkonen_2011_sparsification_influence_networks.pdf), and heuristics, such as degree discount [[Chen et al. 2009]](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/weic-kdd09_influence.pdf).）
 
-**Single Reachability Sketches**
+#### 单一可到达性Sketches
 
-- Take a possible world $$G^{i}$$ (i.e. one simulation of the graph $$G$$ using the Independent Cascade Model)
-- Give each node a uniform random number $$\in [0,1]$$
-- Compute the **rank** of each node $$v$$, which is the **minimum** number among the nodes that $$v$$ can reach in this world.
+- 创造一个可能的世界 $G^{i}$ (比如，图 $G$ 的一种模拟使用独立的级联模型)
+- 给每个节点一个统一的随机数 $$\in [0,1]$$
+- 计算每个节点 $v$ 的**rank**，表示节点 $v$ 在这个世界中可以到达的最小节点数
 
-*Intuition: if $$v$$ can reach a large number of nodes, then its rank is likely to be small. Hence, the rank of node $$v$$ can be used to estimate the influence of node $$v$$ in $$G^{i}$$.*
+直观上说：如果 $v$ 能到达大量的节点，那么他的**rank**就可能很小。因此，节点 $v$ 的 **rank** 可以用来估计节点在 $G^{i}$ 中的影响。
 
-However, influence estimation based on Single Reachability Sketches (i.e. single simulation of $$G$$ ) is inaccurate. To make a more accurate estimate, we need to build sketches based on many simulations{% include sidenote.html id='note-sketches' note='This is similar to take an average of $$f_{i}(S)$$ in sidenote 1, but in this case, it is achieved by using Combined Reachability Sketches.' %}, which leads to the Combined Reachability Sketches.
+但是，基于单一可达性Sketches的影响估计（即单个对 $G$ 的模拟）是不准确的。为了做出更准确的估计，我们需要基于许多模拟来构建Sketches。（这类似于对 $f_i(S)$ 的平均，但是在这种情况下，可以通过使用组合可到达性Sketches来实现）
 
-**Combined Reachability Sketches**
+#### 组合可到达性 Sketches
 
-In Combined Reachability Sketches, we simulate several possible worlds and keep the smallest $$c$$ values among the nodes that $$u$$ can reach in all the possible worlds.
+在组合可到达性 Sketches中，我们模拟了多个可能的世界，并在所有可能的世界中保持节点 $u$ 可以到达的最小节点值 $c$。
 
-- Construct Combined Reachability Sketches:
+- 构造组合可到达性Sketches:
 
-  - Generate a number of possible worlds
-  - For node $$u$$, assign uniformly distributed random numbers $$r^{i}_{v}\in[0,1]$$ to all $$(v, i)$$ pairs, where $$v$$ is the node in $$u$$'s reachable nodes set in the world $$i$$.
-  - Take the $$c$$ smallest $$r^{i}_{v}$$ as the Combined Reachability Sketches
+  - 产生多个可能的世界
+  - 对于节点 $u$，给所有 $$(v, i)$$ 分配一个均匀分布的随机数 $$r^{i}_{v}\in[0,1]$$，其中 $v$ 是在世界 $i$ 中节点 $u$ 能够达到的节点
+  - 将 $c$ 最小的 $r_{v}^{i}$ 作为组合可到达性Sketches
 
-- Run Greedy for Influence Maximization:
-  - Whenever the greedy algorithm asks for the node with the largest influence, pick node $$u$$ that has the smallest value in its sketch.
-  - After $$u$$ is chosen, find its influence set $$X^{i}_{u}$$, mark the $$(v, i)$$ as infected and remove their $$r^{i}_{v}$$ from the sketches of other nodes.
+- 以贪心方式运行以最大化影响力：
+  - 每当贪心算法选择影响力最大的节点时，选择在其Sketches中具有最小值的节点 $u$
+  - 当 $u$ 被选择后，找到它的影响力集合 $$X^{i}_{u}$$，标记 $$(v, i)$$ 并从其他节点的Sketches重负删除 $$r^{i}_{v}$$
 
-Note: using Combined Reachability Sketches does not provide an approximation guarantee on the true expected influence but an approximation guarantee with respect to the possible worlds considered.
+注意：使用组合可达性Sketches不能为真实的预期影响提供近似保证，而是针对所考虑的可能世界提供近似保证。
